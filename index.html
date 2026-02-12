@@ -1,88 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Valentine's Surprise</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        :root {
-            --primary-pink: #ffe6e6;
-            --accent-red: #ff4d6d;
-            --yes-green: #28a745;
-            --no-red: #dc3545;
-        }
-
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffe6e6;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
+            height: 100vh;
             margin: 0;
-            background-color: var(--primary-pink);
+            font-family: sans-serif;
             overflow: hidden;
             text-align: center;
-            touch-action: manipulation;
         }
-
-        #main-container { 
-            padding: 20px; 
-            width: 100%; 
-            max-width: 600px;
-            z-index: 1; 
-        }
-
-        h1 { color: var(--accent-red); font-size: 2.2rem; margin: 10px 0; }
-
+        .container { width: 100%; padding: 20px; }
         .display-image {
             width: 400px;
             height: 400px;
-            max-width: 90vw;
-            max-height: 50vh;
+            max-width: 85vw;
             object-fit: contain;
-            border-radius: 15px;
+            border-radius: 20px;
             margin-bottom: 20px;
-            background-color: rgba(255, 255, 255, 0.3);
         }
-
-        .button-group {
+        h1 { color: #ff4d6d; }
+        .btn-group {
             display: flex;
             gap: 20px;
             justify-content: center;
             align-items: center;
-            margin-top: 20px;
-            min-height: 200px; 
+            min-height: 200px;
         }
-
         button {
             padding: 15px 30px;
             font-size: 1.2rem;
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             cursor: pointer;
             font-weight: bold;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.2s ease;
-            -webkit-tap-highlight-color: transparent;
         }
-
-        #yesBtn { background-color: var(--yes-green); color: white; z-index: 10; }
-        #noBtn { background-color: var(--no-red); color: white; position: relative; z-index: 1000; }
-
+        #yesBtn { background-color: #28a745; color: white; }
+        #noBtn { background-color: #dc3545; color: white; position: relative; }
         .hidden { display: none !important; }
-
-        #celebration-gif {
-            position: fixed;
-            bottom: 30px;
-            width: 150px;
-            animation: bounce 0.6s infinite alternate ease-in-out;
-            display: none;
-            z-index: 100;
-        }
-
-        @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-40px); } }
     </style>
 </head>
 <body>
@@ -91,86 +54,75 @@
         <source src="https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptoken=93f3503b-d68a-4e2b-8a71-678943770fba" type="audio/mpeg">
     </audio>
 
-    <div id="main-container">
-        <img id="imageDisplay" class="display-image" src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExaXRoNGozNG5tajFxa3d5Y3Z0a282cWxicnA1dHdzYjVnczVtMGVqZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/TkBoNth0Ps3Vm/giphy.gif">
-        <h1 id="questionText">Will you be my valentine?</h1>
-        <div class="button-group">
+    <div id="gameSection">
+        <img id="mainImg" class="display-image" src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExaXRoNGozNG5tajFxa3d5Y3Z0a282cWxicnA1dHdzYjVnczVtMGVqZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/TkBoNth0Ps3Vm/giphy.gif">
+        <h1>Will you be my valentine?</h1>
+        <div class="btn-group">
             <button id="yesBtn">Yes</button>
             <button id="noBtn">No</button>
         </div>
     </div>
 
-    <div id="success-screen" class="hidden">
-        <h1 style="color: var(--accent-red); font-size: 3rem;">Knew you'd say yes!!! ❤️</h1>
+    <div id="yesSection" class="hidden">
+        <h1 style="font-size: 3rem;">Knew you'd say yes!!! ❤️</h1>
         <img class="display-image" src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdnYybGtpb2VubjhucTM0Ym0yN3E3ejFlcWl1bDdpanV5YTdoNjZ0cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/CT5Ye7uVJLFtu/giphy.gif">
     </div>
 
-    <img id="celebration-gif" src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdnYybGtpb2VubjhucTM0Ym0yN3E3ejFlcWl1bDdpanV5YTdoNjZ0cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/CT5Ye7uVJLFtu/giphy.gif">
-
     <script>
-        const elements = {
-            noBtn: document.getElementById('noBtn'),
-            yesBtn: document.getElementById('yesBtn'),
-            img: document.getElementById('imageDisplay'),
-            main: document.getElementById('main-container'),
-            success: document.getElementById('success-screen'),
-            celeb: document.getElementById('celebration-gif'),
-            music: document.getElementById('bgMusic')
-        };
+        var count = 0;
+        var scale = 1;
+        var noBtn = document.getElementById('noBtn');
+        var yesBtn = document.getElementById('yesBtn');
+        var mainImg = document.getElementById('mainImg');
+        var music = document.getElementById('bgMusic');
 
-        const config = {
-            noTexts: ["Are you positive?", "Pretty please?", "If you say no, I'll be very sad...", "I will be very sad...", "pleeeese?"],
-            gifs: [
-                "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExaXRoNGozNG5tajFxa3d5Y3Z0a282cWxicnA1dHdzYjVnczVtMGVqZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/TkBoNth0Ps3Vm/giphy.gif",
-                "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMTkxam1idnVocDdyMnFpZHl1bnMxZ2o2d3oyemcyYXVqbDZiZ3BveCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oxHQfvDzo7VhSRy8M/giphy.gif",
-                "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExNGZqamxocm4wMHduOHM1eWl5OXJ4cmNqdDJrZ3FjaHppdTNmejhjYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LO795Nd4v2DqI9iTcT/giphy.gif",
-                "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdnYybGtpb2VubjhucTM0Ym0yN3E3ejFlcWl1bDdpanV5YTdoNjZ0cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/CT5Ye7uVJLFtu/giphy.gif"
-            ]
-        };
+        var texts = ["Are you positive?", "Pretty please?", "If you say no, I'll be very sad...", "I will be very sad...", "pleeeese?"];
+        var gifs = [
+            "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExaXRoNGozNG5tajFxa3d5Y3Z0a282cWxicnA1dHdzYjVnczVtMGVqZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/TkBoNth0Ps3Vm/giphy.gif",
+            "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMTkxam1idVocDdyMnFpZHl1bnMxZ2o2d3oyemcyYXVqbDZiZ3BveCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oxHQfvDzo7VhSRy8M/giphy.gif",
+            "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExNGZqamxocm4wMHduOHM1eWl5OXJ4cmNqdDJrZ3FjaHppdTNmejhjYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LO795Nd4v2DqI9iTcT/giphy.gif",
+            "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdnYybGtpb2VubjhucTM0Ym0yN3E3ejFlcWl1bDdpanV5YTdoNjZ0cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/CT5Ye7uVJLFtu/giphy.gif"
+        ];
 
-        let count = 0;
-        let scale = 1;
+        function startMusic() {
+            music.play().catch(function(e) {});
+        }
 
-        const moveBtn = () => {
-            const pad = 40;
-            const x = Math.max(pad, Math.floor(Math.random() * (window.innerWidth - elements.noBtn.offsetWidth - pad)));
-            const y = Math.max(pad, Math.floor(Math.random() * (window.innerHeight - elements.noBtn.offsetHeight - pad)));
-            elements.noBtn.style.left = `${x}px`;
-            elements.noBtn.style.top = `${y}px`;
-        };
-
-        const playMusic = () => elements.music.play().catch(() => {});
-        document.body.addEventListener('click', playMusic, { once: true });
-        document.body.addEventListener('touchstart', playMusic, { once: true });
-
-        elements.noBtn.addEventListener('click', () => {
-            if (count < config.noTexts.length) {
-                elements.noBtn.innerText = config.noTexts[count];
+        noBtn.addEventListener('click', function() {
+            startMusic();
+            if (count < texts.length) {
+                noBtn.innerText = texts[count];
                 scale += 0.4;
-                elements.yesBtn.style.transform = `scale(${scale})`;
-                elements.img.src = config.gifs[(count + 1) % config.gifs.length];
+                yesBtn.style.transform = "scale(" + scale + ")";
+                mainImg.src = gifs[(count + 1) % gifs.length];
                 count++;
             } else {
-                elements.noBtn.style.position = 'fixed';
-                moveBtn();
+                noBtn.style.position = 'fixed';
+                move();
             }
         });
 
-        elements.noBtn.addEventListener('touchstart', (e) => {
-            if (count >= config.noTexts.length) {
+        noBtn.addEventListener('touchstart', function(e) {
+            if (count >= texts.length) {
                 e.preventDefault();
-                moveBtn();
+                move();
             }
         });
 
-        elements.noBtn.addEventListener('mouseover', () => {
-            if (count >= config.noTexts.length) moveBtn();
+        noBtn.addEventListener('mouseover', function() {
+            if (count >= texts.length) move();
         });
 
-        elements.yesBtn.addEventListener('click', () => {
-            elements.main.classList.add('hidden');
-            elements.success.classList.remove('hidden');
-            elements.celeb.style.display = 'block';
+        function move() {
+            var x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 40) + 20;
+            var y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 40) + 20;
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+        }
+
+        yesBtn.addEventListener('click', function() {
+            document.getElementById('gameSection').classList.add('hidden');
+            document.getElementById('yesSection').classList.remove('hidden');
             confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
         });
     </script>
