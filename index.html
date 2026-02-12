@@ -22,7 +22,7 @@
             min-height: 100vh;
             margin: 0;
             background-color: var(--primary-pink);
-            overflow-x: hidden;
+            overflow: hidden;
             text-align: center;
             touch-action: manipulation;
         }
@@ -37,9 +37,142 @@
         h1 { color: var(--accent-red); font-size: 2.2rem; margin: 10px 0; }
 
         .display-image {
-            width: 400px;  /* Updated to 400px */
-            height: 400px; /* Updated to 400px */
-            max-width: 90vw; /* Safety for small phones */
-            max-height: 40vh; /* Safety for landscape mode */
+            width: 400px;
+            height: 400px;
+            max-width: 90vw;
+            max-height: 50vh;
             object-fit: contain;
-            border-radius: 15px
+            border-radius: 15px;
+            margin-bottom: 20px;
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            min-height: 200px; 
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        #yesBtn { background-color: var(--yes-green); color: white; z-index: 10; }
+        #noBtn { background-color: var(--no-red); color: white; position: relative; z-index: 1000; }
+
+        .hidden { display: none !important; }
+
+        #celebration-gif {
+            position: fixed;
+            bottom: 30px;
+            width: 150px;
+            animation: bounce 0.6s infinite alternate ease-in-out;
+            display: none;
+            z-index: 100;
+        }
+
+        @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-40px); } }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" loop>
+        <source src="https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptoken=93f3503b-d68a-4e2b-8a71-678943770fba" type="audio/mpeg">
+    </audio>
+
+    <div id="main-container">
+        <img id="imageDisplay" class="display-image" src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExaXRoNGozNG5tajFxa3d5Y3Z0a282cWxicnA1dHdzYjVnczVtMGVqZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/TkBoNth0Ps3Vm/giphy.gif">
+        <h1 id="questionText">Will you be my valentine?</h1>
+        <div class="button-group">
+            <button id="yesBtn">Yes</button>
+            <button id="noBtn">No</button>
+        </div>
+    </div>
+
+    <div id="success-screen" class="hidden">
+        <h1 style="color: var(--accent-red); font-size: 3rem;">Knew you'd say yes!!! ❤️</h1>
+        <img class="display-image" src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdnYybGtpb2VubjhucTM0Ym0yN3E3ejFlcWl1bDdpanV5YTdoNjZ0cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/CT5Ye7uVJLFtu/giphy.gif">
+    </div>
+
+    <img id="celebration-gif" src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdnYybGtpb2VubjhucTM0Ym0yN3E3ejFlcWl1bDdpanV5YTdoNjZ0cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/CT5Ye7uVJLFtu/giphy.gif">
+
+    <script>
+        const elements = {
+            noBtn: document.getElementById('noBtn'),
+            yesBtn: document.getElementById('yesBtn'),
+            img: document.getElementById('imageDisplay'),
+            main: document.getElementById('main-container'),
+            success: document.getElementById('success-screen'),
+            celeb: document.getElementById('celebration-gif'),
+            music: document.getElementById('bgMusic')
+        };
+
+        const config = {
+            noTexts: ["Are you positive?", "Pretty please?", "If you say no, I'll be very sad...", "I will be very sad...", "pleeeese?"],
+            gifs: [
+                "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExaXRoNGozNG5tajFxa3d5Y3Z0a282cWxicnA1dHdzYjVnczVtMGVqZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/TkBoNth0Ps3Vm/giphy.gif",
+                "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMTkxam1idnVocDdyMnFpZHl1bnMxZ2o2d3oyemcyYXVqbDZiZ3BveCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oxHQfvDzo7VhSRy8M/giphy.gif",
+                "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExNGZqamxocm4wMHduOHM1eWl5OXJ4cmNqdDJrZ3FjaHppdTNmejhjYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LO795Nd4v2DqI9iTcT/giphy.gif",
+                "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdnYybGtpb2VubjhucTM0Ym0yN3E3ejFlcWl1bDdpanV5YTdoNjZ0cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/CT5Ye7uVJLFtu/giphy.gif"
+            ]
+        };
+
+        let count = 0;
+        let scale = 1;
+
+        const moveBtn = () => {
+            const pad = 40;
+            const x = Math.max(pad, Math.floor(Math.random() * (window.innerWidth - elements.noBtn.offsetWidth - pad)));
+            const y = Math.max(pad, Math.floor(Math.random() * (window.innerHeight - elements.noBtn.offsetHeight - pad)));
+            elements.noBtn.style.left = `${x}px`;
+            elements.noBtn.style.top = `${y}px`;
+        };
+
+        const playMusic = () => elements.music.play().catch(() => {});
+        document.body.addEventListener('click', playMusic, { once: true });
+        document.body.addEventListener('touchstart', playMusic, { once: true });
+
+        elements.noBtn.addEventListener('click', () => {
+            if (count < config.noTexts.length) {
+                elements.noBtn.innerText = config.noTexts[count];
+                scale += 0.4;
+                elements.yesBtn.style.transform = `scale(${scale})`;
+                elements.img.src = config.gifs[(count + 1) % config.gifs.length];
+                count++;
+            } else {
+                elements.noBtn.style.position = 'fixed';
+                moveBtn();
+            }
+        });
+
+        elements.noBtn.addEventListener('touchstart', (e) => {
+            if (count >= config.noTexts.length) {
+                e.preventDefault();
+                moveBtn();
+            }
+        });
+
+        elements.noBtn.addEventListener('mouseover', () => {
+            if (count >= config.noTexts.length) moveBtn();
+        });
+
+        elements.yesBtn.addEventListener('click', () => {
+            elements.main.classList.add('hidden');
+            elements.success.classList.remove('hidden');
+            elements.celeb.style.display = 'block';
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+        });
+    </script>
+</body>
+</html>
