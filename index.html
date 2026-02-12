@@ -54,7 +54,6 @@
 
         #yesBtn { background-color: #28a745; color: white; z-index: 10; }
         
-        /* Fixed z-index and position for No button */
         #noBtn { 
             background-color: #dc3545; 
             color: white; 
@@ -83,7 +82,7 @@
 
     <div id="success-message" class="hidden">
         <h1 style="color: #ff4d6d; font-size: 3rem;">Knew you'd say yes!!! ❤️</h1>
-        <img class="main-img" src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdnYybGtpb2VubjhucTM0Ym0yN3E3ejFlcWl1bDdpanV5YTdoNjZ0cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/CT5Ye7uVJLFtu/giphy.gif">
+        <img class="main-img" src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ3ZvZmdlanVnZHRwMXBocnpzNWFpdjEzYTh2dXR6dnVhOHNzZjd1ZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/16bJmyPvRbCDu/giphy.gif">
     </div>
 
     <script>
@@ -96,11 +95,10 @@
 
         const noTexts = ["Are you positive?", "Pretty please?", "If you say no, I'll be very sad...", "I will be very sad...", "pleeeese?"];
         
-        // Exactly 5 GIFs
         const gifSequence = [
             "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExaXRoNGozNG5tajFxa3d5Y3Z0a282cWxicnA1dHdzYjVnczVtMGVqZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/TkBoNth0Ps3Vm/giphy.gif",
             "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMTkxam1idnVocDdyMnFpZHl1bnMxZ2o2d3oyemcyYXVqbDZiZ3BveCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oxHQfvDzo7VhSRy8M/giphy.gif",
-            "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExNGZqamxocm4wMHduOHM1eWl5OXJ4cmNqdDJrZ3FjaHppdTNmejhjYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LO795Nd4v2DqI9iTcT/giphy.gif",
+            "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExNGZqamxocm4wMHduOHs1eWl5OXJ4cmNqdDJrZ3FjaHppdTNmejhjYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LO795Nd4v2DqI9iTcT/giphy.gif",
             "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdnYybGtpb2VubjhucTM0Ym0yN3E3ejFlcWl1bDdpanV5YTdoNjZ0cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/CT5Ye7uVJLFtu/giphy.gif",
             "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWlycGFrcXVudGRjd3Vic3l2b3p2eGJndWt6NDI0d3o2bWdkMDR4NiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/NBs1mJNW8qCPrsauIN/giphy.gif"
         ];
@@ -121,47 +119,4 @@
             const maxX = window.innerWidth - noBtn.offsetWidth - padding;
             const maxY = window.innerHeight - noBtn.offsetHeight - padding;
 
-            const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
-            const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
-
-            noBtn.style.left = randomX + 'px';
-            noBtn.style.top = randomY + 'px';
-        }
-
-        noBtn.addEventListener('click', () => {
-            if (clickCount < noTexts.length) {
-                noBtn.innerText = noTexts[clickCount];
-                yesSize += 0.45;
-                yesBtn.style.transform = `scale(${yesSize})`;
-                
-                // Advance image correctly
-                clickCount++;
-                if (clickCount < gifSequence.length) {
-                    displayImg.src = gifSequence[clickCount];
-                }
-            } else {
-                moveButton();
-            }
-        });
-
-        // Mouse hover dodge
-        noBtn.addEventListener('mouseover', () => {
-            if (clickCount >= noTexts.length) moveButton();
-        });
-
-        // Mobile touch dodge
-        noBtn.addEventListener('touchstart', (e) => {
-            if (clickCount >= noTexts.length) {
-                e.preventDefault();
-                moveButton();
-            }
-        });
-
-        yesBtn.addEventListener('click', () => {
-            gameBox.classList.add('hidden');
-            successMessage.classList.remove('hidden');
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-        });
-    </script>
-</body>
-</html>
+            const random
