@@ -99,91 +99,95 @@
 
     <script>
         const noBtn = document.getElementById('noBtn');
-        const yesBtn = document.getElementById('yesBtn');
-        const bunnyImg = document.getElementById('bunnyDisplay');
-        const gameBox = document.getElementById('game-box');
-        const successMessage = document.getElementById('success-message');
-        const jumpingBunny = document.getElementById('jumpingBunny');
-        const music = document.getElementById('bgMusic');
+const yesBtn = document.getElementById('yesBtn');
+const bunnyImg = document.getElementById('bunnyDisplay');
+const gameBox = document.getElementById('game-box');
+const successMessage = document.getElementById('success-message');
+const jumpingBunny = document.getElementById('jumpingBunny');
+const music = document.getElementById('bgMusic');
 
-        const noTexts = [
-            "Are you positive?", 
-            "Pretty please?", 
-            "If you say no, I'll be very sad...", 
-            "I will be very sad...", 
-            "pleeeese?"
-        ];
-        
-        const bunnyGifs = [
-            "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExaXRoNGozNG5tajFxa3d5Y3Z0a282cWxicnA1dHdzYjVnczVtMGVqZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/TkBoNth0Ps3Vm/giphy.gif",
-            "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdnYybGtpb2VubjhucTM0Ym0yN3E3ejFlcWl1bDdpanV5YTdoNjZ0cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/CT5Ye7uVJLFtu/giphy.gif",
-            "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMTkxam1idnVocDdyMnFpZHl1bnMxZ2o2d3oyemcyYXVqbDZiZ3BveCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oxHQfvDzo7VhSRy8M/giphy.gif",
-            "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExNGZqamxocm4wMHduOHM1eWl5OXJ4cmNqdDJrZ3FjaHppdTNmejhjYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LO795Nd4v2DqI9iTcT/giphy.gif"
-        ];
+const noTexts = ["Are you positive?", "Pretty please?", "If you say no, I'll be very sad...", "I will be very sad...", "pleeeese?"];
+// Make sure to put your GIF links back in this list!
+const Gifs = [
+    "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMTkxam1idnVocDdyMnFpZHl1bnMxZ2o2d3oyemcyYXVqbDZiZ3BveCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oxHQfvDzo7VhSRy8M/giphy.gif",
+    "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExaXRoNGozNG5tajFxa3d5Y3Z0a282cWxicnA1dHdzYjVnczVtMGVqZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/TkBoNth0Ps3Vm/giphy.gif",
+    "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdnYybGtpb2VubjhucTM0Ym0yN3E3ejFlcWl1bDdpanV5YTdoNjZ0cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/CT5Ye7uVJLFtu/giphy.gif",
+    "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExNGZqamxocm4wMHduOHM1eWl5OXJ4cmNqdDJrZ3FjaHppdTNmejhjYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LO795Nd4v2DqI9iTcT/giphy.gif"
+];
 
-        let clickCount = 0;
-        let yesSize = 1;
+let clickCount = 0;
+let yesSize = 1;
 
-        function playMusic() {
-            music.play().catch(() => {});
-        }
+function playMusic() {
+    music.play().catch(() => {});
+}
 
-        function handleNoInteraction() {
-            playMusic();
-            if (clickCount < noTexts.length) {
-                noBtn.innerText = noTexts[clickCount];
-                yesSize += 0.4;
-                yesBtn.style.transformOrigin = "top";
-                yesBtn.style.transform = `scale(${yesSize})`;
-                bunnyImg.src = bunnyGifs[(clickCount + 1) % bunnyGifs.length];
-                clickCount++;
-            } else {
-                noBtn.style.position = 'fixed';
-                moveButton();
-            }
-        }
+document.body.addEventListener('touchstart', playMusic, { once: true });
+document.body.addEventListener('click', playMusic, { once: true });
 
-        noBtn.addEventListener('click', handleNoInteraction);
-        
-        // Mobile specific: moves the button when they try to touch it
-        noBtn.addEventListener('touchstart', (e) => {
-            if (clickCount >= noTexts.length) {
-                e.preventDefault(); // Prevents the click from actually happening
-                moveButton();
-            }
+function handleNo() {
+    if (clickCount < noTexts.length) {
+        noBtn.innerText = noTexts[clickCount];
+        yesSize += 0.4;
+        yesBtn.style.transformOrigin = "top";
+        yesBtn.style.transform = `scale(${yesSize})`;
+        bunnyImg.src = bunnyGifs[(clickCount + 1) % bunnyGifs.length];
+        clickCount++;
+    } else {
+        // Start the dodge!
+        noBtn.style.position = 'fixed';
+        noBtn.style.zIndex = '999';
+        moveButton();
+    }
+}
+
+function moveButton() {
+    // We calculate the screen size minus the button size
+    // We add a 50px padding so it doesn't stick to the very edge
+    const padding = 50;
+    const maxWidth = window.innerWidth - noBtn.offsetWidth - padding;
+    const maxHeight = window.innerHeight - noBtn.offsetHeight - padding;
+
+    const randomX = Math.max(padding, Math.floor(Math.random() * maxWidth));
+    const randomY = Math.max(padding, Math.floor(Math.random() * maxHeight));
+
+    noBtn.style.left = randomX + 'px';
+    noBtn.style.top = randomY + 'px';
+}
+
+noBtn.addEventListener('click', handleNo);
+
+// This is the magic for mobile
+noBtn.addEventListener('touchstart', (e) => {
+    if (clickCount >= noTexts.length) {
+        e.preventDefault(); // This stops the "click" and just moves it
+        moveButton();
+    }
+});
+
+// This is for the laptop/mouse
+noBtn.addEventListener('mouseover', () => {
+    if (clickCount >= noTexts.length) {
+        moveButton();
+    }
+});
+
+yesBtn.addEventListener('click', () => {
+    gameBox.classList.add('hidden');
+    successMessage.classList.remove('hidden');
+    jumpingBunny.style.display = 'block';
+    
+    // Confetti effect
+    var duration = 15 * 1000;
+    var animationEnd = Date.now() + duration;
+    var interval = setInterval(function() {
+        var timeLeft = animationEnd - Date.now();
+        if (timeLeft <= 0) return clearInterval(interval);
+        confetti({
+            particleCount: 30,
+            startVelocity: 30,
+            spread: 360,
+            origin: { x: Math.random(), y: Math.random() - 0.2 }
         });
-
-        function moveButton() {
-            // Keeps the button within the phone screen boundaries
-            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 20);
-            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 20);
-            noBtn.style.left = `${x}px`;
-            noBtn.style.top = `${y}px`;
-        }
-
-        noBtn.addEventListener('mouseover', () => {
-            if (clickCount >= noTexts.length) moveButton();
-        });
-
-        yesBtn.addEventListener('click', () => {
-            playMusic();
-            gameBox.classList.add('hidden');
-            successMessage.classList.remove('hidden');
-            jumpingBunny.style.display = 'block';
-
-            var duration = 15 * 1000;
-            var animationEnd = Date.now() + duration;
-            var interval = setInterval(function() {
-                var timeLeft = animationEnd - Date.now();
-                if (timeLeft <= 0) return clearInterval(interval);
-                confetti({
-                    particleCount: 30,
-                    startVelocity: 30,
-                    spread: 360,
-                    origin: { x: Math.random(), y: Math.random() - 0.2 }
-                });
-            }, 250);
-        });
-    </script>
-</body>
-</html>
+    }, 250);
+});
