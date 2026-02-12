@@ -19,14 +19,15 @@
             text-align: center;
         }
 
-        #container {
-            padding: 20px;
+        #game-box { 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            z-index: 1;
         }
 
-        h1 {
-            color: #ff4d6d;
-            font-size: 2.5rem;
-        }
+        h1 { color: #ff4d6d; font-size: 2.5rem; margin-bottom: 20px; z-index: 10; position: relative; }
 
         .bunny-img {
             width: 250px;
@@ -43,6 +44,8 @@
             justify-content: center;
             align-items: center;
             margin-top: 20px;
+            /* Using a container to prevent overlap with the text above */
+            min-height: 150px; 
         }
 
         button {
@@ -51,51 +54,37 @@
             border: none;
             border-radius: 10px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            font-weight: bold;
+            transition: transform 0.2s ease;
         }
 
-        #yesBtn {
-            background-color: #ff4d6d;
-            color: white;
-        }
+        /* Color changes you requested */
+        #yesBtn { background-color: #28a745; color: white; }
+        #noBtn { background-color: #dc3545; color: white; position: relative; }
 
-        #noBtn {
-            background-color: #999;
-            color: white;
-            position: relative;
-        }
-
-        /* Success State Styling */
-        .celebration-text {
-            color: #ff4d6d;
-            font-size: 3rem;
-            display: none;
-        }
-
-        .hidden {
-            display: none !important;
-        }
+        .hidden { display: none !important; }
 
         .jumping-bunny {
             position: fixed;
             bottom: 20px;
             width: 150px;
-            animation: jump 1s infinite alternate ease-in-out;
+            animation: jump 0.6s infinite alternate ease-in-out;
             display: none;
         }
 
-        @keyframes jump {
-            from { transform: translateY(0); }
-            to { transform: translateY(-50px); }
-        }
+        @keyframes jump { from { transform: translateY(0); } to { transform: translateY(-50px); } }
     </style>
 </head>
 <body>
 
+    <audio id="bgMusic" loop>
+        <source src="https://audio.com/john-doe-1855008618736002/audio/charlie-puth-marvin-gaye-lyrics-ft-meghan-trainor" type="audio/mpeg">
+        <source src="https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptoken=93f3503b-d68a-4e2b-8a71-678943770fba" type="audio/mpeg">
+    </audio>
+
     <div id="game-box">
-        <img id="bunnyDisplay" class="bunny-img" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHp1eHN3YWFpbmR4ZHZ1bm9wYXJ0Zno3OHR6Ym05cWp5am50cTlsZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/k39hH6KqPue0S5xL1W/giphy.gif" alt="Judy Hopps">
+        <img id="bunnyDisplay" class="bunny-img" src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHp1eHN3YWFpbmR4ZHZ1bm9wYXJ0Zno3OHR6Ym05cWp5am50cTlsZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/k39hH6KqPue0S5xL1W/giphy.gif" alt="Judy Hopps">
         <h1 id="question">Will you be my valentine?</h1>
-        
         <div class="buttons">
             <button id="yesBtn">Yes</button>
             <button id="noBtn">No</button>
@@ -103,11 +92,11 @@
     </div>
 
     <div id="success-message" class="hidden">
-        <h1 class="celebration-text">Knew you'd say yes!!! ❤️</h1>
-        <img class="bunny-img" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3Y5Ym10bXoxeHV3bmZ4bnR6NmR3ZzZ4NTRxd3N6eXN6eXN6eXN6eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Lp88vYvA7i9R70XQOf/giphy.gif">
+        <h1 style="color: #ff4d6d; font-size: 3rem;">Knew you'd say yes!!! ❤️</h1>
+        <img class="bunny-img" src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3Y5Ym10bXoxeHV3bmZ4bnR6NmR3ZzZ4NTRxd3N6eXN6eXN6eXN6eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Lp88vYvA7i9R70XQOf/giphy.gif">
     </div>
 
-    <img id="jumpingBunny" class="jumping-bunny" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3Y5Ym10bXoxeHV3bmZ4bnR6NmR3ZzZ4NTRxd3N6eXN6eXN6eXN6eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Lp88vYvA7i9R70XQOf/giphy.gif">
+    <img id="jumpingBunny" class="jumping-bunny" src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3Y5Ym10bXoxeHV3bmZ4bnR6NmR3ZzZ4NTRxd3N6eXN6eXN6eXN6eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Lp88vYvA7i9R70XQOf/giphy.gif">
 
     <script>
         const noBtn = document.getElementById('noBtn');
@@ -116,57 +105,60 @@
         const gameBox = document.getElementById('game-box');
         const successMessage = document.getElementById('success-message');
         const jumpingBunny = document.getElementById('jumpingBunny');
+        const music = document.getElementById('bgMusic');
 
         const noTexts = [
-            "Are you positive?",
-            "Pretty please?",
-            "If you say no, I'll be very sad...",
-            "I will be very sad...",
+            "Are you positive?", 
+            "Pretty please?", 
+            "If you say no, I'll be very sad...", 
+            "I will be very sad...", 
             "pleeeese?"
         ];
-
-        // Zootopia Judy Hopps Gifs
+        
         const bunnyGifs = [
-            "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHp1eHN3YWFpbmR4ZHZ1bm9wYXJ0Zno3OHR6Ym05cWp5am50cTlsZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/k39hH6KqPue0S5xL1W/giphy.gif",
-            "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNmNudHB4bmR4ZHZ1bm9wYXJ0Zno3OHR6Ym05cWp5am50cTlsZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/vX6pX6S3YfW/giphy.gif",
-            "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHp1eHN3YWFpbmR4ZHZ1bm9wYXJ0Zno3OHR6Ym05cWp5am50cTlsZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/k39hH6KqPue0S5xL1W/giphy.gif",
-            "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYno5Ym10bXoxeHV3bmZ4bnR6NmR3ZzZ4NTRxd3N6eXN6eXN6eXN6eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/10tIjpzIu8feY8/giphy.gif"
+            "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHp1eHN3YWFpbmR4ZHZ1bm9wYXJ0Zno3OHR6Ym05cWp5am50cTlsZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/k39hH6KqPue0S5xL1W/giphy.gif",
+            "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNmNudHB4bmR4ZHZ1bm9wYXJ0Zno3OHR6Ym05cWp5am50cTlsZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/vX6pX6S3YfW/giphy.gif",
+            "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHp1eHN3YWFpbmR4ZHZ1bm9wYXJ0Zno3OHR6Ym05cWp5am50cTlsZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/k39hH6KqPue0S5xL1W/giphy.gif",
+            "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExYno5Ym10bXoxeHV3bmZ4bnR6NmR3ZzZ4NTRxd3N6eXN6eXN6eXN6eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/10tIjpzIu8feY8/giphy.gif"
         ];
 
         let clickCount = 0;
-        let yesSize = 1.2;
-        let noSize = 1.2;
+        let yesSize = 1;
+
+        function startMusic() {
+            music.play().catch(() => {
+                console.log("Music needs a click to start!");
+            });
+        }
 
         noBtn.addEventListener('click', () => {
+            startMusic();
             if (clickCount < noTexts.length) {
-                // Change Text
                 noBtn.innerText = noTexts[clickCount];
-                
-                // Scale buttons
+                // YES button grows but we cap it and push it down 
                 yesSize += 0.5;
-                noSize -= 0.15;
+                yesBtn.style.transformOrigin = "top"; // Grows downward
                 yesBtn.style.transform = `scale(${yesSize})`;
-                noBtn.style.transform = `scale(${noSize})`;
-
-                // Change Image (loops through the gifs)
-                bunnyImg.src = bunnyGifs[(clickCount + 1) % bunnyGifs.length];
                 
+                // Update Image
+                bunnyImg.src = bunnyGifs[(clickCount + 1) % bunnyGifs.length];
                 clickCount++;
             } else {
-                // Make it dodge
-                noBtn.style.position = 'absolute';
+                // If they click it one last time, start the dodging forever
+                noBtn.style.position = 'fixed';
                 moveButton();
             }
         });
 
-        // Function to move button away from cursor
+        // The "Scamper Away" Logic
         function moveButton() {
-            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 40);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 40);
             noBtn.style.left = `${x}px`;
             noBtn.style.top = `${y}px`;
         }
 
+        // Moves every time the cursor gets close
         noBtn.addEventListener('mouseover', () => {
             if (clickCount >= noTexts.length) {
                 moveButton();
@@ -174,50 +166,24 @@
         });
 
         yesBtn.addEventListener('click', () => {
+            startMusic();
             gameBox.classList.add('hidden');
             successMessage.classList.remove('hidden');
-            successMessage.style.display = 'block';
             jumpingBunny.style.display = 'block';
 
-            // Firework effect
+            // Celebration Fireworks
             var duration = 15 * 1000;
             var animationEnd = Date.now() + duration;
-            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-
-            function randomInRange(min, max) {
-              return Math.random() * (max - min) + min;
-            }
-
             var interval = setInterval(function() {
-              var timeLeft = animationEnd - Date.now();
-
-              if (timeLeft <= 0) {
-                return clearInterval(interval);
-              }
-
-              var particleCount = 50 * (timeLeft / duration);
-              // since particles fall down, start a bit higher than random
-              confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
-              confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+                var timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) return clearInterval(interval);
+                confetti({
+                    particleCount: 40,
+                    startVelocity: 30,
+                    spread: 360,
+                    origin: { x: Math.random(), y: Math.random() - 0.2 }
+                });
             }, 250);
-
-            // Floating Hearts
-            setInterval(() => {
-                confetti({
-                    particleCount: 2,
-                    angle: 60,
-                    spread: 55,
-                    origin: { x: 0 },
-                    colors: ['#ff4d6d', '#ff85a1']
-                });
-                confetti({
-                    particleCount: 2,
-                    angle: 120,
-                    spread: 55,
-                    origin: { x: 1 },
-                    colors: ['#ff4d6d', '#ff85a1']
-                });
-            }, 500);
         });
     </script>
 </body>
