@@ -3,51 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Valentine's Surprise</title>
+    <title>Be My Valentine?</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        :root {
-            --primary-pink: #ffe6e6;
-            --accent-red: #ff4d6d;
-            --yes-green: #28a745;
-            --no-red: #dc3545;
-        }
-
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Arial', sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
             margin: 0;
-            background-color: var(--primary-pink);
+            background-color: #ffe6e6;
             overflow: hidden;
             text-align: center;
             touch-action: manipulation;
         }
 
-        #main-container { 
-            padding: 20px; 
-            width: 100%; 
-            max-width: 500px;
-            z-index: 1; 
-        }
+        #game-box { padding: 10px; width: 100%; z-index: 1; }
+        h1 { color: #ff4d6d; font-size: 2.2rem; margin-bottom: 15px; }
 
-        h1 { color: var(--accent-red); font-size: 2.2rem; margin-bottom: 20px; }
-
-        .display-image {
+        /* Updated to your 400x400 preference */
+        .main-img {
             width: 400px;
             height: 400px;
             object-fit: contain;
-            border-radius: 15px;
+            border-radius: 20px;
             margin-bottom: 20px;
-            background-color: rgba(255, 255, 255, 0.3);
+            max-width: 90vw;
         }
 
-        .button-group {
+        .buttons {
             display: flex;
-            gap: 20px;
+            gap: 15px;
             justify-content: center;
             align-items: center;
             margin-top: 10px;
@@ -55,32 +43,20 @@
         }
 
         button {
-            padding: 15px 30px;
-            font-size: 1.2rem;
+            padding: 15px 25px;
+            font-size: 1.1rem;
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             cursor: pointer;
             font-weight: bold;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             transition: transform 0.2s ease;
             -webkit-tap-highlight-color: transparent;
         }
 
-        #yesBtn { background-color: var(--yes-green); color: white; z-index: 10; }
-        #noBtn { background-color: var(--no-red); color: white; position: relative; z-index: 1000; }
+        #yesBtn { background-color: #28a745; color: white; z-index: 10; }
+        #noBtn { background-color: #dc3545; color: white; position: relative; z-index: 1000; }
 
         .hidden { display: none !important; }
-
-        #celebration-gif {
-            position: fixed;
-            bottom: 30px;
-            width: 150px;
-            animation: bounce 0.6s infinite alternate ease-in-out;
-            display: none;
-            z-index: 100;
-        }
-
-        @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-40px); } }
     </style>
 </head>
 <body>
@@ -89,94 +65,111 @@
         <source src="https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptoken=93f3503b-d68a-4e2b-8a71-678943770fba" type="audio/mpeg">
     </audio>
 
-    <div id="main-container">
-        <img id="imageDisplay" class="display-image" src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMDd5bzU2YXQzNzEyNnBuMTg1b2F2azNlNmxhY2kxNzd0cGNucW5ybCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/vwN2nKohPRTZwnK6Oq/giphy.gif">
-        <h1 id="questionText">Will you be my valentine?</h1>
-        <div class="button-group">
+    <div id="game-box">
+        <img id="imageDisplay" class="main-img" src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExaXRoNGozNG5tajFxa3d5Y3Z0a282cWxicnA1dHdzYjVnczVtMGVqZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/TkBoNth0Ps3Vm/giphy.gif" alt="Valentine GIF">
+        <h1 id="question">Will you be my valentine?</h1>
+        <div class="buttons">
             <button id="yesBtn">Yes</button>
             <button id="noBtn">No</button>
         </div>
     </div>
 
-    <div id="success-screen" class="hidden">
-        <h1 style="color: var(--accent-red); font-size: 3rem;">Knew you'd say yes!!! ❤️</h1>
-        <img class="display-image" src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ3ZvZmdlanVnZHRwMXBocnpzNWFpdjEzYTh2dXR6dnVhOHNzZjd1ZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/16bJmyPvRbCDu/giphy.gif">
+    <div id="success-message" class="hidden">
+        <h1 style="color: #ff4d6d; font-size: 3rem;">Knew you'd say yes!!! ❤️</h1>
+        <img class="main-img" src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdnYybGtpb2VubjhucTM0Ym0yN3E3ejFlcWl1bDdpanV5YTdoNjZ0cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/CT5Ye7uVJLFtu/giphy.gif">
     </div>
 
-
     <script>
-        const elements = {
-            noBtn: document.getElementById('noBtn'),
-            yesBtn: document.getElementById('yesBtn'),
-            img: document.getElementById('imageDisplay'),
-            main: document.getElementById('main-container'),
-            success: document.getElementById('success-screen'),
-            celeb: document.getElementById('celebration-gif'),
-            music: document.getElementById('bgMusic')
-        };
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        const displayImg = document.getElementById('imageDisplay');
+        const gameBox = document.getElementById('game-box');
+        const successMessage = document.getElementById('success-message');
+        const music = document.getElementById('bgMusic');
 
-        const config = {
-            noTexts: ["Are you positive?", "Pretty please?", "If you say no, I'll be very sad...", "I will be very sad...", "pleeeese?"],
-            gifs: [
-                "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExaXRoNGozNG5tajFxa3d5Y3Z0a282cWxicnA1dHdzYjVnczVtMGVqZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/TkBoNth0Ps3Vm/giphy.gif",
-                "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMTkxam1idnVocDdyMnFpZHl1bnMxZ2o2d3oyemcyYXVqbDZiZ3BveCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oxHQfvDzo7VhSRy8M/giphy.gif",
-                "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExNGZqamxocm4wMHduOHM1eWl5OXJ4cmNqdDJrZ3FjaHppdTNmejhjYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LO795Nd4v2DqI9iTcT/giphy.gif",
-                "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWlycGFrcXVudGRjd3Vic3l2b3p2eGJndWt6NDI0d3o2bWdkMDR4NiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/NBs1mJNW8qCPrsauIN/giphy.gif",
-                "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdnYybGtpb2VubjhucTM0Ym0yN3E3ejFlcWl1bDdpanV5YTdoNjZ0cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/CT5Ye7uVJLFtu/giphy.gif"
-            ]
-        };
+        const noTexts = [
+            "Are you positive?", 
+            "Pretty please?", 
+            "If you say no, I'll be very sad...", 
+            "I will be very sad...", 
+            "pleeeese?"
+        ];
 
-        let state = { count: 0, yesScale: 1 };
+        // Sequence of 5 GIFs to prevent repeating
+        const gifSequence = [
+            "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExaXRoNGozNG5tajFxa3d5Y3Z0a282cWxicnA1dHdzYjVnczVtMGVqZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/TkBoNth0Ps3Vm/giphy.gif", // Start
+            "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMTkxam1idnVocDdyMnFpZHl1bnMxZ2o2d3oyemcyYXVqbDZiZ3BveCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oxHQfvDzo7VhSRy8M/giphy.gif", // Click 1
+            "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExNGZqamxocm4wMHduOHM1eWl5OXJ4cmNqdDJrZ3FjaHppdTNmejhjYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LO795Nd4v2DqI9iTcT/giphy.gif", // Click 2
+            "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdnYybGtpb2VubjhucTM0Ym0yN3E3ejFlcWl1bDdpanV5YTdoNjZ0cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/CT5Ye7uVJLFtu/giphy.gif", // Click 3
+            "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWlycGFrcXVudGRjd3Vic3l2b3p2eGJndWt6NDI0d3o2bWdkMDR4NiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/NBs1mJNW8qCPrsauIN/giphy.gif"  // Click 4
+        ];
 
-        const playMusic = () => elements.music.play().catch(() => {});
-        document.body.addEventListener('click', playMusic, { once: true });
+        let clickCount = 0;
+        let yesSize = 1;
+
+        function playMusic() {
+            music.play().catch(() => {});
+        }
+
         document.body.addEventListener('touchstart', playMusic, { once: true });
+        document.body.addEventListener('click', playMusic, { once: true });
 
-        const moveNoButton = () => {
-            const padding = 40;
-            const maxX = window.innerWidth - elements.noBtn.offsetWidth - padding;
-            const maxY = window.innerHeight - elements.noBtn.offsetHeight - padding;
-            
+        function handleNo() {
+            if (clickCount < noTexts.length) {
+                noBtn.innerText = noTexts[clickCount];
+                yesSize += 0.4;
+                yesBtn.style.transformOrigin = "center";
+                yesBtn.style.transform = `scale(${yesSize})`;
+                
+                // Change image based on click count
+                if (clickCount + 1 < gifSequence.length) {
+                    displayImg.src = gifSequence[clickCount + 1];
+                }
+                
+                clickCount++;
+            } else {
+                noBtn.style.position = 'fixed';
+                moveButton();
+            }
+        }
+
+        function moveButton() {
+            const padding = 40; 
+            const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+            const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+
             const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
             const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
 
-            elements.noBtn.style.left = `${randomX}px`;
-            elements.noBtn.style.top = `${randomY}px`;
-        };
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+        }
 
-        elements.noBtn.addEventListener('click', () => {
-            if (state.count < config.noTexts.length) {
-                elements.noBtn.innerText = config.noTexts[state.count];
-                state.yesScale += 0.4;
-                elements.yesBtn.style.transform = `scale(${state.yesScale})`;
-                elements.yesBtn.style.transformOrigin = "top";
-                elements.img.src = config.gifs[(state.count + 1) % config.gifs.length];
-                state.count++;
-            } else {
-                elements.noBtn.style.position = 'fixed';
-                moveNoButton();
-            }
+        noBtn.addEventListener('click', () => {
+            if (clickCount < noTexts.length) handleNo();
+            else moveButton();
         });
 
-        elements.noBtn.addEventListener('touchstart', (e) => {
-            if (state.count >= config.noTexts.length) {
+        noBtn.addEventListener('touchstart', (e) => {
+            if (clickCount >= noTexts.length) {
                 e.preventDefault();
-                moveNoButton();
+                moveButton();
             }
         });
 
-        elements.noBtn.addEventListener('mouseover', () => {
-            if (state.count >= config.noTexts.length) moveNoButton();
+        noBtn.addEventListener('mouseover', () => {
+            if (clickCount >= noTexts.length) moveButton();
         });
 
-        elements.yesBtn.addEventListener('click', () => {
-            elements.main.classList.add('hidden');
-            elements.success.classList.remove('hidden');
-            elements.celeb.style.display = 'block';
+        yesBtn.addEventListener('click', () => {
+            gameBox.classList.add('hidden');
+            successMessage.classList.remove('hidden');
             
-            const end = Date.now() + (15 * 1000);
-            const interval = setInterval(() => {
-                if (Date.now() > end) return clearInterval(interval);
+            var duration = 15 * 1000;
+            var animationEnd = Date.now() + duration;
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) return clearInterval(interval);
                 confetti({
                     particleCount: 30,
                     startVelocity: 30,
