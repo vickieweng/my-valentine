@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Be My Valentine?</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
@@ -17,6 +17,7 @@
             background-color: #ffe6e6;
             overflow: hidden;
             text-align: center;
+            touch-action: manipulation; /* Prevents zooming when tapping fast */
         }
 
         #game-box { 
@@ -24,41 +25,40 @@
             flex-direction: column;
             align-items: center;
             width: 100%;
-            z-index: 1;
+            padding: 10px;
         }
 
-        h1 { color: #ff4d6d; font-size: 2.5rem; margin-bottom: 20px; z-index: 10; position: relative; }
+        h1 { color: #ff4d6d; font-size: 2rem; margin-bottom: 15px; }
 
         .bunny-img {
-            width: 250px;
-            height: 250px;
+            width: 200px;
+            height: 200px;
             object-fit: cover;
             border-radius: 20px;
             margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
         .buttons {
             display: flex;
-            gap: 20px;
+            gap: 15px;
             justify-content: center;
             align-items: center;
-            margin-top: 20px;
-            /* Using a container to prevent overlap with the text above */
+            margin-top: 10px;
             min-height: 150px; 
+            width: 100%;
         }
 
         button {
-            padding: 15px 30px;
-            font-size: 1.2rem;
+            padding: 15px 25px;
+            font-size: 1.1rem;
             border: none;
             border-radius: 10px;
             cursor: pointer;
             font-weight: bold;
             transition: transform 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* Color changes you requested */
         #yesBtn { background-color: #28a745; color: white; }
         #noBtn { background-color: #dc3545; color: white; position: relative; }
 
@@ -66,19 +66,18 @@
 
         .jumping-bunny {
             position: fixed;
-            bottom: 20px;
-            width: 150px;
+            bottom: 10px;
+            width: 100px;
             animation: jump 0.6s infinite alternate ease-in-out;
             display: none;
         }
 
-        @keyframes jump { from { transform: translateY(0); } to { transform: translateY(-50px); } }
+        @keyframes jump { from { transform: translateY(0); } to { transform: translateY(-30px); } }
     </style>
 </head>
 <body>
 
     <audio id="bgMusic" loop>
-        <source src="https://audio.com/john-doe-1855008618736002/audio/charlie-puth-marvin-gaye-lyrics-ft-meghan-trainor" type="audio/mpeg">
         <source src="https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptoken=93f3503b-d68a-4e2b-8a71-678943770fba" type="audio/mpeg">
     </audio>
 
@@ -92,7 +91,7 @@
     </div>
 
     <div id="success-message" class="hidden">
-        <h1 style="color: #ff4d6d; font-size: 3rem;">Knew you'd say yes!!! ❤️</h1>
+        <h1 style="color: #ff4d6d; font-size: 2.5rem;">Knew you'd say yes!!! ❤️</h1>
         <img class="bunny-img" src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3Y5Ym10bXoxeHV3bmZ4bnR6NmR3ZzZ4NTRxd3N6eXN6eXN6eXN6eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Lp88vYvA7i9R70XQOf/giphy.gif">
     </div>
 
@@ -125,60 +124,60 @@
         let clickCount = 0;
         let yesSize = 1;
 
-        function startMusic() {
-            music.play().catch(() => {
-                console.log("Music needs a click to start!");
-            });
+        function playMusic() {
+            music.play().catch(() => {});
         }
 
-        noBtn.addEventListener('click', () => {
-            startMusic();
+        function handleNoInteraction() {
+            playMusic();
             if (clickCount < noTexts.length) {
                 noBtn.innerText = noTexts[clickCount];
-                // YES button grows but we cap it and push it down 
-                yesSize += 0.5;
-                yesBtn.style.transformOrigin = "top"; // Grows downward
+                yesSize += 0.4;
+                yesBtn.style.transformOrigin = "top";
                 yesBtn.style.transform = `scale(${yesSize})`;
-                
-                // Update Image
                 bunnyImg.src = bunnyGifs[(clickCount + 1) % bunnyGifs.length];
                 clickCount++;
             } else {
-                // If they click it one last time, start the dodging forever
                 noBtn.style.position = 'fixed';
+                moveButton();
+            }
+        }
+
+        noBtn.addEventListener('click', handleNoInteraction);
+        
+        // Mobile specific: moves the button when they try to touch it
+        noBtn.addEventListener('touchstart', (e) => {
+            if (clickCount >= noTexts.length) {
+                e.preventDefault(); // Prevents the click from actually happening
                 moveButton();
             }
         });
 
-        // The "Scamper Away" Logic
         function moveButton() {
-            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 40);
-            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 40);
+            // Keeps the button within the phone screen boundaries
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 20);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 20);
             noBtn.style.left = `${x}px`;
             noBtn.style.top = `${y}px`;
         }
 
-        // Moves every time the cursor gets close
         noBtn.addEventListener('mouseover', () => {
-            if (clickCount >= noTexts.length) {
-                moveButton();
-            }
+            if (clickCount >= noTexts.length) moveButton();
         });
 
         yesBtn.addEventListener('click', () => {
-            startMusic();
+            playMusic();
             gameBox.classList.add('hidden');
             successMessage.classList.remove('hidden');
             jumpingBunny.style.display = 'block';
 
-            // Celebration Fireworks
             var duration = 15 * 1000;
             var animationEnd = Date.now() + duration;
             var interval = setInterval(function() {
                 var timeLeft = animationEnd - Date.now();
                 if (timeLeft <= 0) return clearInterval(interval);
                 confetti({
-                    particleCount: 40,
+                    particleCount: 30,
                     startVelocity: 30,
                     spread: 360,
                     origin: { x: Math.random(), y: Math.random() - 0.2 }
