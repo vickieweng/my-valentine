@@ -20,10 +20,9 @@
             touch-action: manipulation;
         }
 
-        #game-box { padding: 10px; width: 100%; z-index: 1; }
+        #game-box { padding: 10px; width: 100%; }
         h1 { color: #ff4d6d; font-size: 2.2rem; margin-bottom: 15px; }
 
-        /* Updated to your 400x400 preference */
         .main-img {
             width: 400px;
             height: 400px;
@@ -39,7 +38,7 @@
             justify-content: center;
             align-items: center;
             margin-top: 10px;
-            min-height: 200px; 
+            min-height: 250px; 
         }
 
         button {
@@ -54,7 +53,15 @@
         }
 
         #yesBtn { background-color: #28a745; color: white; z-index: 10; }
-        #noBtn { background-color: #dc3545; color: white; position: relative; z-index: 1000; }
+        
+        /* Fixed z-index and position for No button */
+        #noBtn { 
+            background-color: #dc3545; 
+            color: white; 
+            position: relative; 
+            z-index: 9999; 
+            margin: 0;
+        }
 
         .hidden { display: none !important; }
     </style>
@@ -66,7 +73,7 @@
     </audio>
 
     <div id="game-box">
-        <img id="imageDisplay" class="main-img" src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExaXRoNGozNG5tajFxa3d5Y3Z0a282cWxicnA1dHdzYjVnczVtMGVqZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/TkBoNth0Ps3Vm/giphy.gif" alt="Valentine GIF">
+        <img id="imageDisplay" class="main-img" src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExaXRoNGozNG5tajFxa3d5Y3Z0a282cWxicnA1dHdzYjVnczVtMGVqZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/TkBoNth0Ps3Vm/giphy.gif">
         <h1 id="question">Will you be my valentine?</h1>
         <div class="buttons">
             <button id="yesBtn">Yes</button>
@@ -87,21 +94,15 @@
         const successMessage = document.getElementById('success-message');
         const music = document.getElementById('bgMusic');
 
-        const noTexts = [
-            "Are you positive?", 
-            "Pretty please?", 
-            "If you say no, I'll be very sad...", 
-            "I will be very sad...", 
-            "pleeeese?"
-        ];
-
-        // Sequence of 5 GIFs to prevent repeating
+        const noTexts = ["Are you positive?", "Pretty please?", "If you say no, I'll be very sad...", "I will be very sad...", "pleeeese?"];
+        
+        // Exactly 5 GIFs
         const gifSequence = [
-            "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExaXRoNGozNG5tajFxa3d5Y3Z0a282cWxicnA1dHdzYjVnczVtMGVqZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/TkBoNth0Ps3Vm/giphy.gif", // Start
-            "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMTkxam1idnVocDdyMnFpZHl1bnMxZ2o2d3oyemcyYXVqbDZiZ3BveCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oxHQfvDzo7VhSRy8M/giphy.gif", // Click 1
-            "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExNGZqamxocm4wMHduOHM1eWl5OXJ4cmNqdDJrZ3FjaHppdTNmejhjYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LO795Nd4v2DqI9iTcT/giphy.gif", // Click 2
-            "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdnYybGtpb2VubjhucTM0Ym0yN3E3ejFlcWl1bDdpanV5YTdoNjZ0cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/CT5Ye7uVJLFtu/giphy.gif", // Click 3
-            "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWlycGFrcXVudGRjd3Vic3l2b3p2eGJndWt6NDI0d3o2bWdkMDR4NiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/NBs1mJNW8qCPrsauIN/giphy.gif"  // Click 4
+            "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExaXRoNGozNG5tajFxa3d5Y3Z0a282cWxicnA1dHdzYjVnczVtMGVqZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/TkBoNth0Ps3Vm/giphy.gif",
+            "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMTkxam1idnVocDdyMnFpZHl1bnMxZ2o2d3oyemcyYXVqbDZiZ3BveCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oxHQfvDzo7VhSRy8M/giphy.gif",
+            "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExNGZqamxocm4wMHduOHM1eWl5OXJ4cmNqdDJrZ3FjaHppdTNmejhjYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LO795Nd4v2DqI9iTcT/giphy.gif",
+            "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdnYybGtpb2VubjhucTM0Ym0yN3E3ejFlcWl1bDdpanV5YTdoNjZ0cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/CT5Ye7uVJLFtu/giphy.gif",
+            "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWlycGFrcXVudGRjd3Vic3l2b3p2eGJndWt6NDI0d3o2bWdkMDR4NiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/NBs1mJNW8qCPrsauIN/giphy.gif"
         ];
 
         let clickCount = 0;
@@ -111,30 +112,12 @@
             music.play().catch(() => {});
         }
 
-        document.body.addEventListener('touchstart', playMusic, { once: true });
         document.body.addEventListener('click', playMusic, { once: true });
-
-        function handleNo() {
-            if (clickCount < noTexts.length) {
-                noBtn.innerText = noTexts[clickCount];
-                yesSize += 0.4;
-                yesBtn.style.transformOrigin = "center";
-                yesBtn.style.transform = `scale(${yesSize})`;
-                
-                // Change image based on click count
-                if (clickCount + 1 < gifSequence.length) {
-                    displayImg.src = gifSequence[clickCount + 1];
-                }
-                
-                clickCount++;
-            } else {
-                noBtn.style.position = 'fixed';
-                moveButton();
-            }
-        }
+        document.body.addEventListener('touchstart', playMusic, { once: true });
 
         function moveButton() {
-            const padding = 40; 
+            noBtn.style.position = 'fixed';
+            const padding = 50; 
             const maxX = window.innerWidth - noBtn.offsetWidth - padding;
             const maxY = window.innerHeight - noBtn.offsetHeight - padding;
 
@@ -146,10 +129,27 @@
         }
 
         noBtn.addEventListener('click', () => {
-            if (clickCount < noTexts.length) handleNo();
-            else moveButton();
+            if (clickCount < noTexts.length) {
+                noBtn.innerText = noTexts[clickCount];
+                yesSize += 0.45;
+                yesBtn.style.transform = `scale(${yesSize})`;
+                
+                // Advance image correctly
+                clickCount++;
+                if (clickCount < gifSequence.length) {
+                    displayImg.src = gifSequence[clickCount];
+                }
+            } else {
+                moveButton();
+            }
         });
 
+        // Mouse hover dodge
+        noBtn.addEventListener('mouseover', () => {
+            if (clickCount >= noTexts.length) moveButton();
+        });
+
+        // Mobile touch dodge
         noBtn.addEventListener('touchstart', (e) => {
             if (clickCount >= noTexts.length) {
                 e.preventDefault();
@@ -157,26 +157,10 @@
             }
         });
 
-        noBtn.addEventListener('mouseover', () => {
-            if (clickCount >= noTexts.length) moveButton();
-        });
-
         yesBtn.addEventListener('click', () => {
             gameBox.classList.add('hidden');
             successMessage.classList.remove('hidden');
-            
-            var duration = 15 * 1000;
-            var animationEnd = Date.now() + duration;
-            var interval = setInterval(function() {
-                var timeLeft = animationEnd - Date.now();
-                if (timeLeft <= 0) return clearInterval(interval);
-                confetti({
-                    particleCount: 30,
-                    startVelocity: 30,
-                    spread: 360,
-                    origin: { x: Math.random(), y: Math.random() - 0.2 }
-                });
-            }, 250);
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
         });
     </script>
 </body>
