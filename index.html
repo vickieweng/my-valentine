@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine?</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #ffe6e6;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        #container {
+            padding: 20px;
+        }
+
+        h1 {
+            color: #ff4d6d;
+            font-size: 2.5rem;
+        }
+
+        .bunny-img {
+            width: 250px;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #yesBtn {
+            background-color: #ff4d6d;
+            color: white;
+        }
+
+        #noBtn {
+            background-color: #999;
+            color: white;
+            position: relative;
+        }
+
+        /* Success State Styling */
+        .celebration-text {
+            color: #ff4d6d;
+            font-size: 3rem;
+            display: none;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .jumping-bunny {
+            position: fixed;
+            bottom: 20px;
+            width: 150px;
+            animation: jump 1s infinite alternate ease-in-out;
+            display: none;
+        }
+
+        @keyframes jump {
+            from { transform: translateY(0); }
+            to { transform: translateY(-50px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="game-box">
+        <img id="bunnyDisplay" class="bunny-img" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHp1eHN3YWFpbmR4ZHZ1bm9wYXJ0Zno3OHR6Ym05cWp5am50cTlsZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/k39hH6KqPue0S5xL1W/giphy.gif" alt="Judy Hopps">
+        <h1 id="question">Will you be my valentine?</h1>
+        
+        <div class="buttons">
+            <button id="yesBtn">Yes</button>
+            <button id="noBtn">No</button>
+        </div>
+    </div>
+
+    <div id="success-message" class="hidden">
+        <h1 class="celebration-text">Knew you'd say yes!!! ❤️</h1>
+        <img class="bunny-img" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3Y5Ym10bXoxeHV3bmZ4bnR6NmR3ZzZ4NTRxd3N6eXN6eXN6eXN6eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Lp88vYvA7i9R70XQOf/giphy.gif">
+    </div>
+
+    <img id="jumpingBunny" class="jumping-bunny" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3Y5Ym10bXoxeHV3bmZ4bnR6NmR3ZzZ4NTRxd3N6eXN6eXN6eXN6eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Lp88vYvA7i9R70XQOf/giphy.gif">
+
+    <script>
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        const bunnyImg = document.getElementById('bunnyDisplay');
+        const gameBox = document.getElementById('game-box');
+        const successMessage = document.getElementById('success-message');
+        const jumpingBunny = document.getElementById('jumpingBunny');
+
+        const noTexts = [
+            "Are you positive?",
+            "Pretty please?",
+            "If you say no, I'll be very sad...",
+            "I will be very sad...",
+            "pleeeese?"
+        ];
+
+        // Zootopia Judy Hopps Gifs
+        const bunnyGifs = [
+            "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHp1eHN3YWFpbmR4ZHZ1bm9wYXJ0Zno3OHR6Ym05cWp5am50cTlsZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/k39hH6KqPue0S5xL1W/giphy.gif",
+            "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNmNudHB4bmR4ZHZ1bm9wYXJ0Zno3OHR6Ym05cWp5am50cTlsZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/vX6pX6S3YfW/giphy.gif",
+            "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHp1eHN3YWFpbmR4ZHZ1bm9wYXJ0Zno3OHR6Ym05cWp5am50cTlsZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/k39hH6KqPue0S5xL1W/giphy.gif",
+            "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYno5Ym10bXoxeHV3bmZ4bnR6NmR3ZzZ4NTRxd3N6eXN6eXN6eXN6eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/10tIjpzIu8feY8/giphy.gif"
+        ];
+
+        let clickCount = 0;
+        let yesSize = 1.2;
+        let noSize = 1.2;
+
+        noBtn.addEventListener('click', () => {
+            if (clickCount < noTexts.length) {
+                // Change Text
+                noBtn.innerText = noTexts[clickCount];
+                
+                // Scale buttons
+                yesSize += 0.5;
+                noSize -= 0.15;
+                yesBtn.style.transform = `scale(${yesSize})`;
+                noBtn.style.transform = `scale(${noSize})`;
+
+                // Change Image (loops through the gifs)
+                bunnyImg.src = bunnyGifs[(clickCount + 1) % bunnyGifs.length];
+                
+                clickCount++;
+            } else {
+                // Make it dodge
+                noBtn.style.position = 'absolute';
+                moveButton();
+            }
+        });
+
+        // Function to move button away from cursor
+        function moveButton() {
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+            noBtn.style.left = `${x}px`;
+            noBtn.style.top = `${y}px`;
+        }
+
+        noBtn.addEventListener('mouseover', () => {
+            if (clickCount >= noTexts.length) {
+                moveButton();
+            }
+        });
+
+        yesBtn.addEventListener('click', () => {
+            gameBox.classList.add('hidden');
+            successMessage.classList.remove('hidden');
+            successMessage.style.display = 'block';
+            jumpingBunny.style.display = 'block';
+
+            // Firework effect
+            var duration = 15 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            function randomInRange(min, max) {
+              return Math.random() * (max - min) + min;
+            }
+
+            var interval = setInterval(function() {
+              var timeLeft = animationEnd - Date.now();
+
+              if (timeLeft <= 0) {
+                return clearInterval(interval);
+              }
+
+              var particleCount = 50 * (timeLeft / duration);
+              // since particles fall down, start a bit higher than random
+              confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+              confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+            }, 250);
+
+            // Floating Hearts
+            setInterval(() => {
+                confetti({
+                    particleCount: 2,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: ['#ff4d6d', '#ff85a1']
+                });
+                confetti({
+                    particleCount: 2,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: ['#ff4d6d', '#ff85a1']
+                });
+            }, 500);
+        });
+    </script>
+</body>
+</html>
