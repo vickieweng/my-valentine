@@ -6,12 +6,12 @@
     <title>Be My Valentine?</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
+        :root {
+            --primary-pink: #ffe6e6;
+            --accent-red: #ff4d6d;
+        }
+
         body {
-            <body>
-    <div id="overlay" onclick="startGame()" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #ffe6e6; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10000; cursor: pointer;">
-        <div style="font-size: 80px; animation: pulse 1.5s infinite;">❤️</div>
-        <p style="color: #ff4d6d; font-weight: bold; margin-top: 20px;">Click the heart to open!</p>
-    </div>
             font-family: 'Arial', sans-serif;
             display: flex;
             flex-direction: column;
@@ -19,15 +19,40 @@
             justify-content: center;
             height: 100vh;
             margin: 0;
-            background-color: #ffe6e6;
+            background-color: var(--primary-pink);
             overflow: hidden;
             text-align: center;
             touch-action: manipulation;
         }
 
-        #game-box { padding: 10px; width: 100%; }
-        h1 { color: #ff4d6d; font-size: 2.2rem; margin-bottom: 15px; }
-display: none;
+        /* Music Unlock Overlay */
+        #overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--primary-pink);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            cursor: pointer;
+        }
+
+        .heart-icon { 
+            font-size: 80px; 
+            animation: pulse 1.5s infinite; 
+            user-select: none;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        #game-box { padding: 10px; width: 100%; display: none; }
+        h1 { color: var(--accent-red); font-size: 2.2rem; margin-bottom: 15px; }
+
         .main-img {
             width: 400px;
             height: 400px;
@@ -65,10 +90,15 @@ display: none;
 </head>
 <body>
 
-<audio id="bgMusic" loop>
-    <source src="music.mp3" type="audio/mpeg">
-</audio>
-<div id="game-box" style="display: none;">
+    <div id="overlay" onclick="startGame()">
+        <div class="heart-icon">❤️</div>
+        <p style="color: #ff4d6d; font-weight: bold; margin-top: 20px;">Click the heart to open!</p>
+    </div>
+
+    <audio id="bgMusic" loop>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+
     <div id="game-box">
         <img id="imageDisplay" class="main-img" src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMDd5bzU2YXQzNzEyNnBuMTg1b2F2azNlNmxhY2kxNzd0cGNucW5ybCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/vwN2nKohPRTZwnK6Oq/giphy.gif">
         <h1 id="question">Will you be my valentine?</h1>
@@ -84,33 +114,31 @@ display: none;
     </div>
 
     <script>
-        function startGame() {
-    const music = document.getElementById('bgMusic');
-    const overlay = document.getElementById('overlay');
-    const gameBox = document.getElementById('game-box');
-    
-    music.play().catch(() => {}); // This starts the music!
-    overlay.style.display = 'none'; // This hides the heart
-    gameBox.style.display = 'block'; // This shows your game
-}
+        const music = document.getElementById('bgMusic');
+        const overlay = document.getElementById('overlay');
+        const gameBox = document.getElementById('game-box');
         const noBtn = document.getElementById('noBtn');
         const yesBtn = document.getElementById('yesBtn');
         const displayImg = document.getElementById('imageDisplay');
-        const gameBox = document.getElementById('game-box');
         const successMessage = document.getElementById('success-message');
         const successImg = document.getElementById('successImg');
-        const music = document.getElementById('bgMusic');
+
+        // Function to unlock audio and show game
+        function startGame() {
+            music.play().catch((e) => { console.log("Audio play deferred"); }); 
+            overlay.style.display = 'none';
+            gameBox.style.display = 'block';
+        }
 
         const noTexts = ["Are you positive?", "Pretty please?", "If you say no, I'll be very sad...", "I will be very sad...", "pleeeese?"];
         
-        // Sequence of images: Start (0), then 1, 2, 3, 4, 5
         const gifSequence = [
-            "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMDd5bzU2YXQzNzEyNnBuMTg1b2F2azNlNmxhY2kxNzd0cGNucW5ybCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/vwN2nKohPRTZwnK6Oq/giphy.gif", // 0: Start
-            "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExaXRoNGozNG5tajFxa3d5Y3Z0a282cWxicnA1dHdzYjVnczVtMGVqZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/TkBoNth0Ps3Vm/giphy.gif", // 1
-            "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMTkxam1idnVocDdyMnFpZHl1bnMxZ2o2d3oyemcyYXVqbDZiZ3BveCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oxHQfvDzo7VhSRy8M/giphy.gif", // 2
-            "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExNGZqamxocm4wMHduOHM1eWl5OXJ4cmNqdDJrZ3FjaHppdTNmejhjYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LO795Nd4v2DqI9iTcT/giphy.gif", // 3
-            "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdnYybGtpb2VubjhucTM0Ym0yN3E3ejFlcWl1bDdpanV5YTdoNjZ0cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/CT5Ye7uVJLFtu/giphy.gif", // 4
-            "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWlycGFrcXVudGRjd3Vic3l2b3p2eGJndWt6NDI0d3o2bWdkMDR4NiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/NBs1mJNW8qCPrsauIN/giphy.gif"  // 5
+            "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMDd5bzU2YXQzNzEyNnBuMTg1b2F2azNlNmxhY2kxNzd0cGNucW5ybCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/vwN2nKohPRTZwnK6Oq/giphy.gif",
+            "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExaXRoNGozNG5tajFxa3d5Y3Z0a282cWxicnA1dHdzYjVnczVtMGVqZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/TkBoNth0Ps3Vm/giphy.gif",
+            "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMTkxam1idnVocDdyMnFpZHl1bnMxZ2o2d3oyemcyYXVqbDZiZ3BveCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oxHQfvDzo7VhSRy8M/giphy.gif",
+            "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExNGZqamxocm4wMHduOHM1eWl5OXJ4cmNqdDJrZ3FjaHppdTNmejhjYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LO795Nd4v2DqI9iTcT/giphy.gif",
+            "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdnYybGtpb2VubjhucTM0Ym0yN3E3ejFlcWl1bDdpanV5YTdoNjZ0cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/CT5Ye7uVJLFtu/giphy.gif",
+            "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWlycGFrcXVudGRjd3Vic3l2b3p2eGJndWt6NDI0d3o2bWdkMDR4NiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/NBs1mJNW8qCPrsauIN/giphy.gif"
         ];
 
         let clickCount = 0;
@@ -129,14 +157,9 @@ display: none;
 
         noBtn.addEventListener('click', () => {
             if (clickCount < noTexts.length) {
-                // Change Text
                 noBtn.innerText = noTexts[clickCount];
-                
-                // Grow Yes Button
                 yesSize += 0.5;
                 yesBtn.style.transform = `scale(${yesSize})`;
-
-                // Advance Image
                 clickCount++;
                 if (clickCount < gifSequence.length) {
                     displayImg.src = gifSequence[clickCount];
@@ -146,7 +169,12 @@ display: none;
             }
         });
 
-        noBtn.addEventListener('mouseover', () => { if (clickCount >= noTexts.length) moveButton(); });
+        // Dodge logic for mouse
+        noBtn.addEventListener('mouseover', () => {
+            if (clickCount >= noTexts.length) moveButton();
+        });
+
+        // Dodge logic for mobile touch
         noBtn.addEventListener('touchstart', (e) => {
             if (clickCount >= noTexts.length) {
                 e.preventDefault();
@@ -155,12 +183,14 @@ display: none;
         });
 
         yesBtn.addEventListener('click', () => {
-            // Set final image explicitly here
             successImg.src = "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ3ZvZmdlanVnZHRwMXBocnpzNWFpdjEzYTh2dXR6dnVhOHNzZjd1ZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/16bJmyPvRbCDu/giphy.gif";
             gameBox.classList.add('hidden');
             successMessage.classList.remove('hidden');
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-            music.play().catch(() => {});
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
         });
     </script>
 </body>
