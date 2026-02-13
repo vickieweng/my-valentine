@@ -7,6 +7,11 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         body {
+            <body>
+    <div id="overlay" onclick="startGame()" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #ffe6e6; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10000; cursor: pointer;">
+        <div style="font-size: 80px; animation: pulse 1.5s infinite;">❤️</div>
+        <p style="color: #ff4d6d; font-weight: bold; margin-top: 20px;">Click the heart to open!</p>
+    </div>
             font-family: 'Arial', sans-serif;
             display: flex;
             flex-direction: column;
@@ -22,7 +27,7 @@
 
         #game-box { padding: 10px; width: 100%; }
         h1 { color: #ff4d6d; font-size: 2.2rem; margin-bottom: 15px; }
-
+display: none;
         .main-img {
             width: 400px;
             height: 400px;
@@ -60,10 +65,10 @@
 </head>
 <body>
 
-    <audio id="bgMusic" loop>
-        <source src="https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptoken=93f3503b-d68a-4e2b-8a71-678943770fba" type="audio/mpeg">
-    </audio>
-
+<audio id="bgMusic" loop>
+    <source src="music.mp3" type="audio/mpeg">
+</audio>
+<div id="game-box" style="display: none;">
     <div id="game-box">
         <img id="imageDisplay" class="main-img" src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMDd5bzU2YXQzNzEyNnBuMTg1b2F2azNlNmxhY2kxNzd0cGNucW5ybCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/vwN2nKohPRTZwnK6Oq/giphy.gif">
         <h1 id="question">Will you be my valentine?</h1>
@@ -79,6 +84,15 @@
     </div>
 
     <script>
+        function startGame() {
+    const music = document.getElementById('bgMusic');
+    const overlay = document.getElementById('overlay');
+    const gameBox = document.getElementById('game-box');
+    
+    music.play().catch(() => {}); // This starts the music!
+    overlay.style.display = 'none'; // This hides the heart
+    gameBox.style.display = 'block'; // This shows your game
+}
         const noBtn = document.getElementById('noBtn');
         const yesBtn = document.getElementById('yesBtn');
         const displayImg = document.getElementById('imageDisplay');
